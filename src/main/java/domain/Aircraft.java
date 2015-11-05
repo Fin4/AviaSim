@@ -7,7 +7,7 @@ import org.jgroups.Message;
 
 import java.io.Serializable;
 
-public class Aircraft implements Flyable, Runnable, Serializable{
+public class Aircraft implements Flyable, Runnable, Serializable {
 
     private String type;
     private int number;
@@ -81,7 +81,6 @@ public class Aircraft implements Flyable, Runnable, Serializable{
     public int hashCode() {
         int result = getType().hashCode();
         result = 31 * result + getNumber();
-        result = 31 * result + (getLongitude() != +0.0f ? Float.floatToIntBits(getLongitude()) : 0);
         return result;
     }
 
