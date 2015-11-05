@@ -73,9 +73,7 @@ public class Aircraft implements Flyable, Runnable, Serializable{
 
         Aircraft aircraft = (Aircraft) o;
 
-        if (getNumber() != aircraft.getNumber()) return false;
-        if (Float.compare(aircraft.getLongitude(), getLongitude()) != 0) return false;
-        return getType().equals(aircraft.getType());
+        return getNumber() == aircraft.getNumber() && Float.compare(aircraft.getLongitude(), getLongitude()) == 0 && getType().equals(aircraft.getType());
 
     }
 
