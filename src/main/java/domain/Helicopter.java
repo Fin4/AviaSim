@@ -1,9 +1,24 @@
 package domain;
 
+import domain.type.HelicopterType;
 
 public class Helicopter extends Aircraft {
 
-    public Helicopter(String type, int number) {
-        super(type, number);
+    private HelicopterType type;
+
+    public HelicopterType getType() {
+        return type;
     }
+
+    public void setType(HelicopterType type) {
+        this.type = type;
+    }
+
+    public Helicopter(HelicopterType type, int number) {
+        super(number);
+
+        this.type = type;
+    }
+
+    public Helicopter() {}
 }

@@ -5,6 +5,8 @@ import com.google.gson.GsonBuilder;
 import org.jgroups.JChannel;
 import org.jgroups.Message;
 import org.jgroups.ReceiverAdapter;
+import typeAdapters.HelicopterAdapter;
+import typeAdapters.PlaneAdapter;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -14,7 +16,7 @@ import java.util.logging.Logger;
 
 public class DispatchCenter{
 
-    private Set<Aircraft> aircraftSet = new HashSet<Aircraft>();
+    private Set<Flyable> aircraftSet = new HashSet<>();
 
     private static Logger log = Logger.getLogger(DispatchCenter.class.getName());
 
@@ -25,8 +27,11 @@ public class DispatchCenter{
 
                 @Override
                 public void receive(Message msg) {
-                    Gson gson = new GsonBuilder().create();
-                    Aircraft aircraft = gson.fromJson(msg.getObject().toString(), Aircraft.class);
+                    Gson gson = new GsonBuilder().
+                            registerTypeHierarchyAdapter(Plane.class, new PlaneAdapter()).
+                            registerTypeHierarchyAdapter(Helicopter.class, new HelicopterAdapter()).
+                            create();
+                    Flyable aircraft = gson.fromJson(msg.getObject().toString(), Flyable.class);
                     if (!aircraftSet.contains(aircraft)) {
                         aircraftSet.add(aircraft);
                     }
@@ -44,10 +49,11 @@ public class DispatchCenter{
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                for (Aircraft a : aircraftSet) {
-                    log.info(a.toString());
+                for (Flyable a : aircraftSet) {
+                    Aircraft aircraft = (Aircraft)a;
+                    log.info(aircraft.toString());
                 }
             }
-        }, 10*1000, 10*1000);
+        }, 1000, 10*1000);
     }
 }

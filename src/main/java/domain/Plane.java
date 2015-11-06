@@ -1,9 +1,23 @@
 package domain;
 
+import domain.type.PlaneType;
 
-public class Plane extends Aircraft {
+public class Plane extends Aircraft{
 
-    public Plane(String type, int number) {
-        super(type, number);
+    private PlaneType type;
+
+    public PlaneType getType() {
+        return type;
     }
+
+    public void setType(PlaneType type) {
+        this.type = type;
+    }
+
+    public Plane(PlaneType type, int number) {
+        super(number);
+        this.type = type;
+    }
+
+    public Plane() {}
 }

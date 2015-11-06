@@ -4,27 +4,29 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.jgroups.JChannel;
 import org.jgroups.Message;
+import typeAdapters.HelicopterAdapter;
+import typeAdapters.PlaneAdapter;
 
 import java.io.Serializable;
 
-public class Aircraft implements Flyable, Runnable, Serializable {
+public abstract class Aircraft implements Flyable, Runnable, Serializable {
 
-    private String type;
-    private int number;
-    private float latitude;
-    private float longitude;
-    private float altitude;
-    private float course;
+    //protected AircraftType type;
+    protected int number;
+    protected float latitude;
+    protected float longitude;
+    protected float altitude;
+    protected float course;
 
     private boolean bFly;
 
-    public String getType() {
+/*    public AircraftType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(AircraftType type) {
         this.type = type;
-    }
+    }*/
 
     public int getNumber() {
         return number;
@@ -73,19 +75,16 @@ public class Aircraft implements Flyable, Runnable, Serializable {
 
         Aircraft aircraft = (Aircraft) o;
 
-        return getNumber() == aircraft.getNumber() && Float.compare(aircraft.getLongitude(), getLongitude()) == 0 && getType().equals(aircraft.getType());
+        return number == aircraft.number;
 
     }
 
     @Override
     public int hashCode() {
-        int result = getType().hashCode();
-        result = 31 * result + getNumber();
-        return result;
+        return number;
     }
 
-    public Aircraft(String type, int number) {
-        this.type = type;
+    public Aircraft(int number) {
         this.number = number;
         this.course = 0;
         this.altitude = 0;
@@ -93,27 +92,14 @@ public class Aircraft implements Flyable, Runnable, Serializable {
         this.latitude = 0;
     }
 
-    public Aircraft() {
-    }
-
-    public void fly() {
-        new Thread(this).start();
-        bFly = true;
-    }
-
-    public void landing() {
-        bFly = false;
-    }
-
-    public boolean isbFly() {
-        return bFly;
-    }
-
     public void run() {
         try {
             JChannel channel = new JChannel();
             channel.connect("AirCluster");
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            Gson gson = new GsonBuilder().
+                    registerTypeHierarchyAdapter(Plane.class, new PlaneAdapter()).
+                    registerTypeHierarchyAdapter(Helicopter.class, new HelicopterAdapter()).
+                    create();
             while (bFly) {
                 latitude += (float) Math.random() * 10;
                 longitude += (float) Math.random() * 10;
@@ -130,15 +116,26 @@ public class Aircraft implements Flyable, Runnable, Serializable {
         }
     }
 
+    public void fly() {
+        new Thread(this).start();
+        bFly = true;
+    }
+
+    public void landing() {
+        bFly = false;
+    }
+
     @Override
     public String toString() {
         return "Aircraft{" +
-                "type='" + type + '\'' +
-                ", number=" + number +
+                "number=" + number +
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
                 ", altitude=" + altitude +
                 ", course=" + course +
                 '}';
+    }
+
+    public Aircraft() {
     }
 }
