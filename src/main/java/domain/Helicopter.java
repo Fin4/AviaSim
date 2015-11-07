@@ -16,9 +16,20 @@ public class Helicopter extends Aircraft {
 
     public Helicopter(HelicopterType type, int number) {
         super(number);
-
         this.type = type;
     }
 
     public Helicopter() {}
+
+    @Override
+    public String toString() {
+        return "Helicopter{" +
+                "type=" + type +
+                ", number=" + number +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", altitude=" + altitude +
+                ", course=" + course +
+                '}';
+    }
 }

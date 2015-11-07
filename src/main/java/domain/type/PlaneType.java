@@ -2,7 +2,7 @@ package domain.type;
 
 import com.google.gson.annotations.SerializedName;
 
-public enum PlaneType implements AircraftType {
+public enum PlaneType {
 
     @SerializedName("A300")
     A300,

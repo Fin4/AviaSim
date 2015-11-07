@@ -2,9 +2,11 @@ package domain;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import org.jgroups.JChannel;
 import org.jgroups.Message;
 import org.jgroups.ReceiverAdapter;
+import typeAdapters.AircraftAdapter;
 import typeAdapters.HelicopterAdapter;
 import typeAdapters.PlaneAdapter;
 
@@ -16,7 +18,7 @@ import java.util.logging.Logger;
 
 public class DispatchCenter{
 
-    private Set<Flyable> aircraftSet = new HashSet<>();
+    private Set<Flyable> aircraftSet = new HashSet<Flyable>();
 
     private static Logger log = Logger.getLogger(DispatchCenter.class.getName());
 
@@ -28,10 +30,11 @@ public class DispatchCenter{
                 @Override
                 public void receive(Message msg) {
                     Gson gson = new GsonBuilder().
-                            registerTypeHierarchyAdapter(Plane.class, new PlaneAdapter()).
-                            registerTypeHierarchyAdapter(Helicopter.class, new HelicopterAdapter()).
+                            registerTypeAdapter(Plane.class, new PlaneAdapter()).
+                            registerTypeAdapter(Helicopter.class, new HelicopterAdapter()).
+                            registerTypeAdapter(Aircraft.class, new AircraftAdapter()).
                             create();
-                    Flyable aircraft = gson.fromJson(msg.getObject().toString(), Flyable.class);
+                    Flyable aircraft = gson.fromJson(msg.getObject().toString(), Aircraft.class);
                     if (!aircraftSet.contains(aircraft)) {
                         aircraftSet.add(aircraft);
                     }
@@ -51,8 +54,9 @@ public class DispatchCenter{
             public void run() {
                 for (Flyable a : aircraftSet) {
                     Aircraft aircraft = (Aircraft)a;
-                    log.info(aircraft.toString());
+                    //log.info(aircraft.toString());
                 }
+                System.out.println(aircraftSet);
             }
         }, 1000, 10*1000);
     }

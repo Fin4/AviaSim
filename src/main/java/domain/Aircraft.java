@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.jgroups.JChannel;
 import org.jgroups.Message;
+import typeAdapters.AircraftAdapter;
 import typeAdapters.HelicopterAdapter;
 import typeAdapters.PlaneAdapter;
 
@@ -11,22 +12,13 @@ import java.io.Serializable;
 
 public abstract class Aircraft implements Flyable, Runnable, Serializable {
 
-    //protected AircraftType type;
     protected int number;
     protected float latitude;
     protected float longitude;
     protected float altitude;
     protected float course;
 
-    private boolean bFly;
-
-/*    public AircraftType getType() {
-        return type;
-    }
-
-    public void setType(AircraftType type) {
-        this.type = type;
-    }*/
+    protected transient boolean bFly;
 
     public int getNumber() {
         return number;
@@ -97,8 +89,9 @@ public abstract class Aircraft implements Flyable, Runnable, Serializable {
             JChannel channel = new JChannel();
             channel.connect("AirCluster");
             Gson gson = new GsonBuilder().
-                    registerTypeHierarchyAdapter(Plane.class, new PlaneAdapter()).
-                    registerTypeHierarchyAdapter(Helicopter.class, new HelicopterAdapter()).
+                    registerTypeAdapter(Plane.class, new PlaneAdapter()).
+                    registerTypeAdapter(Helicopter.class, new HelicopterAdapter()).
+                    /*registerTypeAdapter(Aircraft.class, new AircraftAdapter()).*/
                     create();
             while (bFly) {
                 latitude += (float) Math.random() * 10;
@@ -106,6 +99,7 @@ public abstract class Aircraft implements Flyable, Runnable, Serializable {
                 altitude = (float) Math.random() * 1000;
 
                 String msg = gson.toJson(this);
+                //System.out.println(msg);
                 channel.send(new Message(null, null, msg));
                 Thread.sleep(4000);
             }
@@ -125,6 +119,9 @@ public abstract class Aircraft implements Flyable, Runnable, Serializable {
         bFly = false;
     }
 
+    public Aircraft() {
+    }
+
     @Override
     public String toString() {
         return "Aircraft{" +
@@ -134,8 +131,5 @@ public abstract class Aircraft implements Flyable, Runnable, Serializable {
                 ", altitude=" + altitude +
                 ", course=" + course +
                 '}';
-    }
-
-    public Aircraft() {
     }
 }

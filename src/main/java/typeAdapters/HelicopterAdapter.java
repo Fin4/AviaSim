@@ -1,14 +1,15 @@
 package typeAdapters;
 
 import com.google.gson.*;
-import domain.Aircraft;
 import domain.Helicopter;
 import domain.type.HelicopterType;
 
 import java.lang.reflect.Type;
 
 public class HelicopterAdapter implements JsonSerializer<Helicopter>, JsonDeserializer<Helicopter> {
-    @Override
+
+    private static final String CLASSNAME = "CLASSNAME";
+
     public Helicopter deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
 
 
@@ -23,10 +24,12 @@ public class HelicopterAdapter implements JsonSerializer<Helicopter>, JsonDeseri
         return helicopter;
     }
 
-    @Override
+
     public JsonElement serialize(Helicopter helicopter, Type type, JsonSerializationContext jsonSerializationContext) {
 
         JsonObject jsonObject = new JsonObject();
+        String className = helicopter.getClass().getName();
+        jsonObject.add(CLASSNAME, new JsonPrimitive(className));
         jsonObject.addProperty("type", String.valueOf(helicopter.getType()));
         jsonObject.addProperty("number", helicopter.getNumber());
         jsonObject.addProperty("latitude", helicopter.getLatitude());
