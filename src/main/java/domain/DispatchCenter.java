@@ -13,7 +13,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
 
-public class DispatchCenter{
+public class DispatchCenter {
 
     private Set<Flyable> aircraftSet = new HashSet<Flyable>();
 
