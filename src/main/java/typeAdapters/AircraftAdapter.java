@@ -27,7 +27,6 @@ public class AircraftAdapter implements JsonSerializer<Aircraft>, JsonDeserializ
 
         JsonObject jsonObject =  json.getAsJsonObject();
         String className = jsonObject.get(CLASSNAME).getAsString();
-        //JsonElement element = jsonObject.get("info");
 
         try {
             return context.deserialize(jsonObject, Class.forName(className));

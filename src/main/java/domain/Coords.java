@@ -5,6 +5,7 @@ public class Coords {
     private float latitude;
     private float longitude;
     private float altitude;
+    private float course;
 
     public float getLatitude() {
         return latitude;
@@ -28,6 +29,14 @@ public class Coords {
 
     public void setAltitude(float altitude) {
         this.altitude = altitude;
+    }
+
+    public float getCourse() {
+        return course;
+    }
+
+    public void setCourse(float course) {
+        this.course = course;
     }
 
     public Coords(float latitude, float longitude, float altitude) {

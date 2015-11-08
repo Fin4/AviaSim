@@ -2,13 +2,10 @@ package domain;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import org.jgroups.JChannel;
 import org.jgroups.Message;
 import org.jgroups.ReceiverAdapter;
 import typeAdapters.AircraftAdapter;
-import typeAdapters.HelicopterAdapter;
-import typeAdapters.PlaneAdapter;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -30,8 +27,6 @@ public class DispatchCenter{
                 @Override
                 public void receive(Message msg) {
                     Gson gson = new GsonBuilder().
-                            /*registerTypeAdapter(Plane.class, new PlaneAdapter()).
-                            registerTypeAdapter(Helicopter.class, new HelicopterAdapter()).*/
                             registerTypeAdapter(Aircraft.class, new AircraftAdapter()).
                             create();
                     Flyable aircraft = gson.fromJson(msg.getObject().toString(), Aircraft.class);
