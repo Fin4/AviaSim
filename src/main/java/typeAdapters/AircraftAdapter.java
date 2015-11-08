@@ -5,21 +5,21 @@ import domain.*;
 
 import java.lang.reflect.Type;
 
-public class AircraftAdapter implements /*JsonSerializer<Aircraft>,*/ JsonDeserializer<Aircraft> {
+public class AircraftAdapter implements JsonSerializer<Aircraft>, JsonDeserializer<Aircraft> {
 
     private static final String CLASSNAME = "CLASSNAME";
 
-/*    public JsonElement serialize(Aircraft src, Type typeOfSrc,
+    public JsonElement serialize(Aircraft src, Type typeOfSrc,
                                  JsonSerializationContext context) {
 
         JsonObject jsonObject = new JsonObject();
         String className = src.getClass().getName();
-
+        System.out.println(className);
         jsonObject.add(CLASSNAME, new JsonPrimitive(className));
-        jsonObject.add("aircraft", context.serialize(src, src.getClass()));
+        jsonObject.add("info", context.serialize(src, src.getClass()));
 
         return jsonObject;
-    }*/
+    }
 
 
     public Aircraft deserialize(JsonElement json, Type typeOfT,
@@ -27,10 +27,10 @@ public class AircraftAdapter implements /*JsonSerializer<Aircraft>,*/ JsonDeseri
 
         JsonObject jsonObject =  json.getAsJsonObject();
         String className = jsonObject.get(CLASSNAME).getAsString();
-        JsonElement element = jsonObject.get("aircraft");
+        //JsonElement element = jsonObject.get("info");
 
         try {
-            return context.deserialize(element, Class.forName(className));
+            return context.deserialize(jsonObject, Class.forName(className));
         }
         catch (ClassNotFoundException e) {
             throw new JsonParseException("Unknown type:" + className, e);

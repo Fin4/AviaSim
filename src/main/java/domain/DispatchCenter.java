@@ -30,8 +30,8 @@ public class DispatchCenter{
                 @Override
                 public void receive(Message msg) {
                     Gson gson = new GsonBuilder().
-                            registerTypeAdapter(Plane.class, new PlaneAdapter()).
-                            registerTypeAdapter(Helicopter.class, new HelicopterAdapter()).
+                            /*registerTypeAdapter(Plane.class, new PlaneAdapter()).
+                            registerTypeAdapter(Helicopter.class, new HelicopterAdapter()).*/
                             registerTypeAdapter(Aircraft.class, new AircraftAdapter()).
                             create();
                     Flyable aircraft = gson.fromJson(msg.getObject().toString(), Aircraft.class);
@@ -54,9 +54,8 @@ public class DispatchCenter{
             public void run() {
                 for (Flyable a : aircraftSet) {
                     Aircraft aircraft = (Aircraft)a;
-                    //log.info(aircraft.toString());
+                    log.info(aircraft.toString());
                 }
-                System.out.println(aircraftSet);
             }
         }, 1000, 10*1000);
     }

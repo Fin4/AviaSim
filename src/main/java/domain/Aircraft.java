@@ -99,7 +99,6 @@ public abstract class Aircraft implements Flyable, Runnable, Serializable {
                 altitude = (float) Math.random() * 1000;
 
                 String msg = gson.toJson(this);
-                //System.out.println(msg);
                 channel.send(new Message(null, null, msg));
                 Thread.sleep(4000);
             }
