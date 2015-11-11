@@ -1,8 +1,6 @@
 package domain;
 
-import java.io.Serializable;
-
-public abstract class Aircraft implements Flyable, Runnable, Serializable {
+public abstract class Aircraft implements Flyable, Runnable {
 
     protected int number;
     protected Coords coords;
